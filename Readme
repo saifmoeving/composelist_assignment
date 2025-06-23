@@ -1,0 +1,42 @@
+# KList DSL – Jetpack Compose Fluent List UI
+
+This project demonstrates a custom `KList` DSL (Domain-Specific Language) inspired by Jetpack Compose's `Modifier` chaining pattern. It allows developers to build declarative, scalable, and reusable list UIs using a fluent API.
+
+## Features
+
+- Chainable DSL methods: `.padding()`, `.header()`, `.items()`
+- Uses Jetpack Compose's `LazyColumn` under the hood
+- Clean Architecture: separation of domain, UI, and data layers
+- Clickable list items that display the selected item's name
+- Minimal, composable structure with reusable components
+
+## Usage
+
+Here’s an example of how to use the `KList` DSL inside a Compose screen:
+
+```kotlin
+@Composable
+fun KListScreen(coins: List<Coin>) {
+    var selectedCoinName by remember { mutableStateOf<String?>(null) }
+
+    Column {
+        selectedCoinName?.let {
+            Text(
+                text = "Selected: $it",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        KList.create<Coin>()
+            .padding(16.dp)
+            .header("Top Gainers")
+            .items(coins) { coin ->
+                KListItem(
+                    coin = coin,
+                    onClick = { selectedCoinName = coin.name }
+                )
+            }
+            .render()
+    }
+}
